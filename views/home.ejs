@@ -1,0 +1,132 @@
+<%- contentFor('body') %>
+<section class="dashboard">
+    <h2><%= message %></h2>
+    
+    <div class="stats-container">
+        <article class="stat-card">
+            <i class="fas fa-boxes"></i>
+            <h3>Total Items</h3>
+            <p id="totalItems"><%= items.length %></p>
+        </article>
+        <article class="stat-card">
+            <i class="fas fa-dollar-sign"></i>
+            <h3>Total Value</h3>
+            <p id="totalValue">$<%= items.reduce((sum, item) => sum + item.price, 0).toFixed(2) %></p>
+        </article>
+    </div>
+
+    <div class="items-controls">
+        <input type="text" id="searchInput" placeholder="Search items..." class="search-input">
+        <select id="sortSelect" class="sort-select">
+            <option value="nameAsc">Name (A-Z)</option>
+            <option value="nameDesc">Name (Z-A)</option>
+            <option value="priceAsc">Price (Low to High)</option>
+            <option value="priceDesc">Price (High to Low)</option>
+        </select>
+    </div>
+
+    <div class="items-container">
+        <% items.forEach(item => { %>
+            <article class="item-card" data-id="<%= item._id %>">
+                <div class="item-content">
+                    <h3><%= item.name %></h3>
+                    <p class="description"><%= item.description %></p>
+                    <p class="category"><span class="badge"><%= item.category %></span></p>
+                    <p class="price">$<%= item.price.toFixed(2) %></p>
+                    <div class="currency-conversion"></div>
+                </div>
+                <div class="item-actions">
+                    <button class="edit-btn" onclick="openEditModal('<%= item._id %>', '<%= item.name %>', '<%= item.description %>', <%= item.price %>, '<%= item.category %>')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="delete-btn" onclick="deleteItem('<%= item._id %>')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </article>
+        <% }) %>
+    </div>
+
+    <button id="addItemBtn" class="floating-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+</section>
+
+<!-- Add Item Modal -->
+<div id="addItemModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add New Item</h3>
+        <form id="addItemForm" class="item-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Item Modal -->
+<div id="editItemModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Item</h3>
+        <form id="editItemForm" class="item-form">
+            <input type="hidden" id="editItemId" name="itemId">
+            <div class="form-group">
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editDescription">Description:</label>
+                <textarea id="editDescription" name="description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="editPrice">Price ($):</label>
+                <input type="number" id="editPrice" name="price" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editCategory">Category:</label>
+                <select id="editCategory" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </form>
+    </div>
+</div>
